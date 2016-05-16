@@ -158,12 +158,12 @@ public class DataTransLoad {
 		
 	}
 	
-	public void TxtDataTransferLoad()
+	public void TxtDataTransferLoad(String FieldSplit)
 	{
 		System.out.println("开始导入文本数据...");
 		String[] strs = null;
 		try {
-			while((strs = txt.getData()) != null)
+			while((strs = txt.getData(FieldSplit)) != null)
 			{
 				int i = 1;
 				

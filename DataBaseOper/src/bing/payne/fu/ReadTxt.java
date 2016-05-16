@@ -34,11 +34,12 @@ public class ReadTxt {
 				
 	}
 	
-	public String[] getData()
+	public String[] getData(String FiledSplit)
 	{
 		try {
 			String chunk = br.readLine();
-			String[]  strs=chunk.split("\\^");		
+			//String[]  strs=chunk.split("\\^");
+			String[]  strs=chunk.split(FiledSplit);
 			/*BufferedInputStream bin = new BufferedInputStream(in);
 			int len;
 			len = bin.read(buffer);

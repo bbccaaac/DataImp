@@ -14,7 +14,7 @@ import java.util.Properties;
 import bing.payne.fu.utils.LoadConfUtil;
 public class test {
 
-	public static void main(String[] args) throws Exception{
+	public static void test(String[] args) throws Exception{
 		/*Database TargetDB = new Database("conf/targetdb.properties");	
 		Connection connTar = TargetDB.getConn();
 		System.out.println("连接Oracle数据库成功");
@@ -53,7 +53,8 @@ public class test {
 		Database TargetDB = new Database("conf/targetdb.properties");
 		String sql = "insert into ck15_nhsdml values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		DataTransLoad dtl = new DataTransLoad(TargetDB.getConn(), sql, rt);
-		dtl.TxtDataTransferLoad();
+		dtl.TxtDataTransferLoad("\\^");
+		rt.close();
 		
 		
 		//保留两位小数测试
