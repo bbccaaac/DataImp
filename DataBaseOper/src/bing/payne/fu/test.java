@@ -14,7 +14,7 @@ import java.util.Properties;
 import bing.payne.fu.utils.LoadConfUtil;
 public class test {
 
-	public static void testGit(String[] args) throws Exception{
+	public static void main(String[] args) throws Exception{
 		/*Database TargetDB = new Database("conf/targetdb.properties");	
 		Connection connTar = TargetDB.getConn();
 		System.out.println("连接Oracle数据库成功");
@@ -44,9 +44,16 @@ public class test {
 		
 		
 		//ReadExcel excel = new ReadExcel("conf/test.xls");
-		ReadExcel excel = new ReadExcel("E:\\工作\\各地区\\咸阳\\门诊结算单.xls");
+		/*ReadExcel excel = new ReadExcel("E:\\工作\\各地区\\咸阳\\门诊结算单.xls");
 		DataTransLoad dtl = new DataTransLoad("conf/targetdb.properties", "conf/sql.properties", excel);
-        dtl.ExcelDataTransferLoad();
+        dtl.ExcelDataTransferLoad();*/
+		
+		ReadTxt rt = new ReadTxt("E:\\工作\\各地区\\南充\\ck15_nhsdml.unl");
+		rt.openFile();
+		Database TargetDB = new Database("conf/targetdb.properties");
+		String sql = "insert into ck15_nhsdml values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		DataTransLoad dtl = new DataTransLoad(TargetDB.getConn(), sql, rt);
+		dtl.TxtDataTransferLoad();
 		
 		
 		//保留两位小数测试

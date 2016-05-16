@@ -194,7 +194,7 @@ public class TranFrame extends JFrame {
 		List<String> list = new ArrayList<String>();
 		DatabaseMetaData metaData;
 		try {
-			metaData = DstConn.getMetaData();
+			metaData = SrcConn.getMetaData();
 			ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"});
 			while(rs.next()) {
 			   list.add(rs.getString("TABLE_NAME"));
