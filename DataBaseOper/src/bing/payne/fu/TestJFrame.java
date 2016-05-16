@@ -35,9 +35,9 @@ import javax.swing.JScrollPane;
 public class TestJFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField SrcExcel;
-	private JButton SrcScanExcel;
-	private JButton SrcOpenExcel;
+	private JTextField SrcFile;
+	private JButton SrcScanFile;
+	private JButton SrcOpenFile;
 	
 	private JTextField SrcUser;
 	private JTextField SrcPwd;
@@ -57,6 +57,7 @@ public class TestJFrame extends JFrame {
 	private JPanel DstPanel;
 	private JTextArea Log;
 	private ReadExcel excel;
+	private ReadTxt txt;
 	
 	private String mLog = "";
 	private String filePath = "E:\\";
@@ -69,7 +70,7 @@ public class TestJFrame extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void tt(String[] args) {
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -121,7 +122,7 @@ public class TestJFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		SrcComboBox = new JComboBox();
-		SrcComboBox.setModel(new DefaultComboBoxModel(new String[] {"请选择源数据库", "mysql", "oracle", "excel"}));
+		SrcComboBox.setModel(new DefaultComboBoxModel(new String[] {"请选择源数据库", "mysql", "oracle", "excel", "文本文件"}));
 		SrcComboBox.setToolTipText("");
 		SrcComboBox.setBounds(39, 32, 120, 21);
 		contentPane.add(SrcComboBox);
@@ -174,7 +175,7 @@ public class TestJFrame extends JFrame {
 		button = new JButton("开始导入数据");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(excel == null && SrcConn == null)
+				if(excel == null && SrcConn == null && txt == null)
 				{
 					mLog += "未发现源数据... \r\n";
 					Log.setText(mLog);
@@ -191,7 +192,7 @@ public class TestJFrame extends JFrame {
 						
 						try {
 							TranFrame frame = null;
-							if(excel != null && SrcConn != null)
+							if(excel != null && SrcConn != null && txt != null)
 							{
 								mLog += "请确保只有一个数据源... \r\n";
 								Log.setText(mLog);
@@ -200,6 +201,10 @@ public class TestJFrame extends JFrame {
 							else if(excel != null)
 							{
 								frame = new TranFrame(excel, DstConn);
+							}
+							else if(txt != null)
+							{
+								frame = new TranFrame(txt, DstConn);
 							}
 							else if(SrcConn != null)
 							{
@@ -324,18 +329,18 @@ public class TestJFrame extends JFrame {
 		SrcPanel.add(CloseSrcConn);
     }
 	
-    private void showSrcExcelUI()
+    private void showSrcFileUI(String fileType)
     {
-    	SrcExcel = new JTextField();
-    	SrcExcel.setBounds(10, 70, 192, 21);
-		SrcPanel.add(SrcExcel);
-		SrcExcel.setColumns(10);
+    	SrcFile = new JTextField();
+    	SrcFile.setBounds(10, 70, 192, 21);
+		SrcPanel.add(SrcFile);
+		SrcFile.setColumns(10);
 		
-		SrcScanExcel = new JButton("浏览");
-		SrcScanExcel.setBounds(202, 70, 80, 23);
-		SrcPanel.add(SrcScanExcel);
+		SrcScanFile = new JButton("浏览");
+		SrcScanFile.setBounds(202, 70, 80, 23);
+		SrcPanel.add(SrcScanFile);
 		
-		SrcScanExcel.addActionListener(new ActionListener() {
+		SrcScanFile.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent evt) {
     			if(excel != null)
     			{
@@ -348,6 +353,10 @@ public class TestJFrame extends JFrame {
 						e.printStackTrace();
 					}
     				
+    			}
+    			else if(txt != null)
+    			{
+    				txt.close();
     			}
     			JFileChooser jfc=new JFileChooser(filePath);  
     	        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);  
@@ -363,17 +372,25 @@ public class TestJFrame extends JFrame {
     	        }else if(file.isFile()){  
     	            System.out.println("文件:"+file.getAbsolutePath());  
     	        }  */
-    	        SrcExcel.setText(file.getAbsolutePath());
+    	        SrcFile.setText(file.getAbsolutePath());
     		}
     	});
 		
 		
-		SrcOpenExcel = new JButton("获取Excel数据");
-		SrcOpenExcel.setBounds(172, 100, 135, 23);
-		SrcPanel.add(SrcOpenExcel);
-		SrcOpenExcel.addActionListener(new ActionListener() {
+		SrcOpenFile = new JButton("打开文件");
+		SrcOpenFile.setBounds(172, 100, 135, 23);
+		SrcPanel.add(SrcOpenFile);
+		SrcOpenFile.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent evt) {
-    			openExcel();
+    			if(fileType.equals("excel"))
+    				openExcel();
+    			else if(fileType.equals("文本文件"))
+    				openTxt();
+    			else
+    			{   				
+    				return;
+    			}
+    			
     		}
     	});
 		
@@ -468,10 +485,10 @@ public class TestJFrame extends JFrame {
 		{ 
 			//这个判断是选择只会得到一个结果，如果没有判断，会得到两个相同的值，从而获取不到所要选中的值。。
 		}*/
-		if(evt.getItem().equals("excel"))
+		if(evt.getItem().equals("excel") || evt.getItem().equals("文本文件"))
 		{
 			SrcPanel.removeAll();
-			showSrcExcelUI();
+			showSrcFileUI((String)evt.getItem());
 			SrcPanel.repaint();
 		}
 		else
@@ -581,15 +598,28 @@ public class TestJFrame extends JFrame {
 
     private void openExcel()
     {
-    	String path = SrcExcel.getText();
+    	String path = SrcFile.getText();
     	excel = new ReadExcel(path);
     	if(excel != null)
     	{
-    		mLog += "打开Excel成功... \r\n";
+    		mLog += "打开" + path + "文件成功... \r\n";
     		Log.setText(mLog);
     	}
     }
   
+    private void openTxt()
+    {
+    	String path = SrcFile.getText();
+    	txt = new ReadTxt(path);
+    	txt.openFile();
+    	if(txt != null)
+    	{
+    		mLog += "打开" + path + "文件成功... \r\n";
+    		Log.setText(mLog);
+    	}
+    }
+    
+    
     //设置程序大小并定位程序在屏幕正中
     private void setSizeAndCentralizeMe(int width, int height) {
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
