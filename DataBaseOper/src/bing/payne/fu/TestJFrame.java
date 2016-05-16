@@ -69,7 +69,7 @@ public class TestJFrame extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void tt(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -500,7 +500,7 @@ public class TestJFrame extends JFrame {
     	String driver = null;
     	if(SrcComboBox.getSelectedItem().toString().equals("mysql"))
     	{
-    		url = "jdbc:mysql://" + host + ":" + port + "/" + dbname + "?&useSSL=true";
+    		url = "jdbc:mysql://" + host + ":" + port + "/" + dbname + "?&useSSL=true&useUnicode=true&characterEncoding=gbk";
         	driver = "com.mysql.jdbc.Driver";
     	}else if(SrcComboBox.getSelectedItem().toString().equals("oracle"))
     	{
