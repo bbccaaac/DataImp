@@ -48,15 +48,18 @@ public class test {
 		DataTransLoad dtl = new DataTransLoad("conf/targetdb.properties", "conf/sql.properties", excel);
         dtl.ExcelDataTransferLoad();*/
 		
-		ReadTxt rt = new ReadTxt("E:\\工作\\各地区\\南充\\ck15_nhsdml.unl");
+		/*ReadTxt rt = new ReadTxt("E:\\工作\\各地区\\南充\\ck15_nhsdml.unl");
 		rt.openFile();
 		Database TargetDB = new Database("conf/targetdb.properties");
 		String sql = "insert into ck15_nhsdml values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		DataTransLoad dtl = new DataTransLoad(TargetDB.getConn(), sql, rt);
 		dtl.TxtDataTransferLoad("\\^");
-		rt.close();
+		rt.close();*/
 		
-		
+		Database DB = new Database("conf/targetdb.properties");
+		YbshAutoScheduler yas = new YbshAutoScheduler(DB);
+		String result = yas.callProcedureHasOut("p_fb_test", 4, "int", "1", "string", "payne", "int", "2", "out", "string");
+		System.out.println(result);
 		//保留两位小数测试
 		/*double d = 1.0553;
 		DecimalFormat    df   = new DecimalFormat("######0.00");

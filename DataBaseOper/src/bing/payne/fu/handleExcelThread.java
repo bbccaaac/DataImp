@@ -67,7 +67,7 @@ public class handleExcelThread implements Runnable {
         //{
 		
 		hssfWorkbook = excel.hssfWorkbook;
-		System.out.println("正在处理" + hssfWorkbook.getSheetName(numSheet) + "数据");
+		//System.out.println("正在处理" + hssfWorkbook.getSheetName(numSheet) + "数据");
 		String sheetName = hssfWorkbook.getSheetName(numSheet);
         Sheet hssfSheet =  hssfWorkbook.getSheetAt(numSheet);
         if (hssfSheet == null) 
@@ -83,13 +83,17 @@ public class handleExcelThread implements Runnable {
 	        {
 	        	
 	            Row hssfRow = hssfSheet.getRow(rowNum);
-	            //System.out.println("正在导入"+ sheetName + "第" + rowNum + "行数据。。。");
+	            System.out.println("正在导入"+ sheetName + "第" + rowNum + "行数据。。。");
 	            if (hssfRow != null) {
 	            	for(int i = 0; i < hssfSheet.getRow(0).getPhysicalNumberOfCells(); i++)
 	            	{
 	            		Cell cell = hssfRow.getCell(i);
-	            		//System.out.println(cell.getCellType());
-	            		//System.out.println(excel.getValue(cell));
+	            		
+	            		/*if(cell != null)
+	            		{
+	            			System.out.println(cell.getCellType());
+		            		System.out.println(excel.getValue(cell));
+	            		}*/
 	            		
 	            		if(cell == null)
 	            		{
